@@ -55,16 +55,13 @@ def creacion(r : list):
     minimo = min(r)
     maximo = max(r)
     n = len(r)
-    print(n)
     rango = maximo - minimo 
     k = 1 + 3.3 * math.log(n, 10)
     amplitud = rango / k
-    print(f'amplitud: {amplitud}')
     if amplitud > int(amplitud): 
         # amplitud += 1
         # amplitud = int(amplitud)
         amplitud = round(amplitud)
-    print(f'amplitud: {amplitud}')
     lista = {}
     for esto in r: 
         try: lista[esto] += 1
@@ -92,7 +89,6 @@ def creacion(r : list):
     oficial[0]['fa'] = parte
     oficial[0]['xi'] = list(map(lambda x: (x['minimo'] + x['maximo']) / 2, oficial[0]['clase']))
     oficial[0]['fi.xi'] = [(xi * fi) for xi, fi in zip(oficial[0]['fi'], oficial[0]['xi'])]
-    print(f'suma fixi {sum(oficial[0]["fi.xi"])}')
     oficial[0]['fsr'] = list(map(lambda x: x / oficial[0]['fa'][-1], oficial[0]['fi']))
     oficial[0]['far'] = list(map(lambda x: x / oficial[0]['fa'][-1], oficial[0]['fa']))
     oficial[0]['fsr%'] = list(map(lambda x: x * 100, oficial[0]['fsr']))
