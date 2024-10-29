@@ -173,11 +173,6 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     print(f'Índice de asimetría: {round(indice, 4)} ({simetria})')
     print('++++++++++++++++++++++++++++++++++++++++++++')
     print('**********************************************')
-    print('Clases: ')
-    pprint(todo[0]["clase"])
-    print('Frecuencias: ')
-    pprint(todo[0]["fi"])
-    print('**********************************************')
 
 def prueba(esto): 
     try: 
