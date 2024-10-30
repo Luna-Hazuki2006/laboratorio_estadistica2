@@ -185,23 +185,22 @@ def primero():
     with open('Datos proyecto 2024.csv', 'r') as archivo: 
         lista = list(map(lambda x: dict(map(lambda y: (y[0], float(y[1])) if prueba(y[1], y[0]) else (y[0], y[1]), x.items())), csv.DictReader(archivo)))
     datos = DataFrame(data=lista)
-    for esto in lista[0].keys():
-        if esto not in grande: 
-            sns.set_theme(style="ticks")
-            f, ax = plt.subplots(figsize=(7, 5))
-            sns.despine(f)
-            sns.histplot(
-                datos,
-                x=esto,
-                multiple="stack",
-                edgecolor=".3",
-                linewidth=.5,
-                log_scale=True,
-            )
-            ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
-            # ax.set_xticks([500, 1000, 2000, 5000, 10000])
-            plt.show()
-            continue
+    for esto in lista[0].keys(): 
+        sns.set_theme(style="ticks")
+        f, ax = plt.subplots(figsize=(7, 5))
+        sns.despine(f)
+        sns.histplot(
+            datos,
+            x=esto,
+            multiple="stack",
+            edgecolor=".3",
+            linewidth=.5,
+            log_scale=True,
+        )
+        ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+        # ax.set_xticks([500, 1000, 2000, 5000, 10000])
+        plt.show()
+        if esto not in grande: continue
         print('*' * 30)
         print(f'[{esto}]')
         print('*' * 30)
