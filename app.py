@@ -98,7 +98,7 @@ def creacion(r : list):
     oficial[0]['fi.xi^2'] = [(xi * fixi) for xi, fixi in zip(oficial[0]['fi.xi'], oficial[0]['xi'])]
     return oficial
 
-def proceso(todo : list): 
+def proceso(todo : list, nombre : str): 
     mostrar_tabla(todo[0])
     total = todo[0]['fa'][-1]
     # print(f'Total {total}')
@@ -169,6 +169,9 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     elif indice > 0: simetria = 'Es asimétrica positiva con sesgo a la derecha'
     elif indice < 0: simetria = 'Es asimétrica negativa con sesgo a la izquierda'
     print(f'Índice de asimetría: {round(indice, 4)} ({simetria})')
+    plt.pie(todo[0]['fi'], labels=list(map(lambda x: f'{x["minimo"]}-{x["maximo"]}', todo[0]['clase'])), autopct='%.0f%%')
+    plt.title(nombre)
+    plt.show()
     print('++++++++++++++++++++++++++++++++++++++++++++')
     print('**********************************************')
 
@@ -181,32 +184,66 @@ def prueba(esto, lugar):
         return True
     except: return False
 
+def seleccion(data): 
+    if data[0] == 'Sex': 
+        if data[1] == '0': return (data[0], 'Femenino')
+        elif data[1] == '1': return (data[0], 'Masculino')
+    elif data[0] == 'Married': 
+        if data[1] == '0': return (data[0], 'Soltero')
+        elif data[1] == '1': return (data[0], 'Casado') 
+    elif data[0] == 'USCitizen': 
+        if data[1] == '0': return (data[0], 'Ciudadano')
+        elif data[1] == '1': return (data[0], 'No ciudadano')
+    elif data[0] == 'HealthInsurance': 
+        if data[1] == '0': return (data[0], 'Tiene seguro médico')
+        elif data[1] == '1': return (data[0], 'Sin seguro médico')
+    elif data[0] == 'Language': 
+        if data[1] == '0': return (data[0], 'Inglés')
+        elif data[1] == '1': return (data[0], 'Otro')
+    return data
+
 def primero(): 
     with open('Datos proyecto 2024.csv', 'r') as archivo: 
-        lista = list(map(lambda x: dict(map(lambda y: (y[0], float(y[1])) if prueba(y[1], y[0]) else (y[0], y[1]), x.items())), csv.DictReader(archivo)))
+        lista = list(map(lambda x: dict(map(lambda y: (y[0], float(y[1])) if prueba(y[1], y[0]) else seleccion(y), x.items())), csv.DictReader(archivo)))
     datos = DataFrame(data=lista)
+    sns.set_theme(style="ticks")
+    f, ax = plt.subplots(figsize=(7, 5))
+    sns.despine(f)
     for esto in lista[0].keys(): 
-        sns.set_theme(style="ticks")
-        f, ax = plt.subplots(figsize=(7, 5))
-        sns.despine(f)
+        if esto not in grande: 
+            sns.histplot(
+                datos,
+                x=esto,
+                multiple="stack",
+                edgecolor=".3",
+                linewidth=.5,
+                log_scale=True,
+            )
+            ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+            # ax.set_xticks([500, 1000, 2000, 5000, 10000])
+            plt.show()
+            continue
+        datos = DataFrame(data=list(map(lambda x: dict(map(lambda y: (y[0], 0.5) if y[0] == esto and y[1] <= 0 else y, x.items())), lista)))
         sns.histplot(
             datos,
             x=esto,
             multiple="stack",
             edgecolor=".3",
             linewidth=.5,
-            log_scale=True,
+            log_scale=True, 
+            kde=True
         )
         ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
         # ax.set_xticks([500, 1000, 2000, 5000, 10000])
         plt.show()
-        if esto not in grande: continue
+        sns.displot(datos, x=esto, kind="ecdf")
+        plt.show()
         print('*' * 30)
         print(f'[{esto}]')
         print('*' * 30)
         data = list(map(lambda x: x[esto], lista))
         todo = creacion(data)
-        proceso(todo)
+        proceso(todo, esto)
 
 def main(): 
     primero()
