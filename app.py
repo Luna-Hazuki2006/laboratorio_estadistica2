@@ -55,15 +55,19 @@ def buscar_modales(fi : list):
 
 def creacion(r : list): 
     minimo = min(r)
+    # print(f'mínimo: {minimo}')
     maximo = max(r)
+    # print(f'máximo: {maximo}')
     n = len(r)
     rango = maximo - minimo 
+    # print(f'Rango: {rango}')
     k = 1 + 3.3 * math.log(n, 10)
     amplitud = rango / k
     if amplitud > int(amplitud): 
         # amplitud += 1
         # amplitud = int(amplitud)
         amplitud = round(amplitud)
+    # print(f'amplitud: {amplitud}')
     lista = {}
     for esto in r: 
         try: lista[esto] += 1
@@ -80,6 +84,7 @@ def creacion(r : list):
         minimo = para + 1
         real.append(clase)
     oficial = [{'clase': real}]
+    # print(f'Clases: {len(real)}')
     oficial[0]['fi'] = []
     for esto in real: 
         numero = sum(map(lambda x: lista[x], filter(lambda x: x >= esto['minimo'] and x < esto['maximo'], lista.keys())))
