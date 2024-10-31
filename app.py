@@ -9,6 +9,9 @@ from pprint import pprint
 
 lista = []
 
+salarios = []
+edades = []
+
 def obtencion(lista, numero):
     fa = lista['fa']
     fi = lista['fi']
@@ -179,6 +182,14 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     plt.show()
     print('++++++++++++++++++++++++++++++++++++++++++++')
     print('**********************************************')
+    if nombre == 'Income': 
+        data = (1 - ((44 - media) / desviacion)) * 100
+        salarios.append(data)
+        data = (((49 - media) / desviacion) - ((47 - media) / desviacion)) * 100
+        salarios.append(data)
+    elif nombre == 'Age': 
+        data = ((49 - media) / desviacion) * 100
+        edades.append(data)
 
 grande = ['Age', 'Income', 'HoursWk']
 
@@ -252,6 +263,9 @@ def primero():
 
 def main(): 
     primero()
+    print(f'La probabilidad de que el salario sea mayor que 44 es de {round(salarios[0], 4)}%')
+    print(f'La probabilidad de que el salario de una persona se encuentre entre 47 y 49 es de {round(salarios[1], 4)}%')
+    print(f'La probabilidad de que se encuentre una persona con una edad menor de 49 años es de {round(edades[0], 4)}%')
 
 if __name__ == '__main__': 
     main()
