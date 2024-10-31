@@ -3,6 +3,7 @@ import math
 import random
 import seaborn as sns
 import matplotlib as mpl
+import scipy.stats as st
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 from pprint import pprint
@@ -11,6 +12,7 @@ lista = []
 
 salarios = []
 edades = []
+horarios = []
 
 def obtencion(lista, numero):
     fa = lista['fa']
@@ -183,13 +185,20 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     print('++++++++++++++++++++++++++++++++++++++++++++')
     print('**********************************************')
     if nombre == 'Income': 
-        data = (1 - ((44 - media) / desviacion)) * 100
+        data = (1 - st.norm.cdf((44 - media) / desviacion)) * 100
         salarios.append(data)
-        data = (((49 - media) / desviacion) - ((47 - media) / desviacion)) * 100
+        data = (st.norm.cdf((49 - media) / desviacion) - st.norm.cdf((47 - media) / desviacion)) * 100
         salarios.append(data)
     elif nombre == 'Age': 
-        data = ((49 - media) / desviacion) * 100
+        data = st.norm.cdf((49 - media) / desviacion) * 100
         edades.append(data)
+        data = (st.norm.cdf((50 - media) / desviacion) - st.norm.cdf((46 - media) / desviacion)) * 100
+        edades.append(data)
+    elif nombre == 'HoursWk':
+        data = (1 - st.norm.cdf((29.5 - media) / desviacion)) * 100
+        horarios.append(data)
+        data = st.norm.cdf((26.5 - media) / desviacion) * 100
+        horarios.append(data)
 
 grande = ['Age', 'Income', 'HoursWk']
 
@@ -266,6 +275,9 @@ def main():
     print(f'La probabilidad de que el salario sea mayor que 44 es de {round(salarios[0], 4)}%')
     print(f'La probabilidad de que el salario de una persona se encuentre entre 47 y 49 es de {round(salarios[1], 4)}%')
     print(f'La probabilidad de que se encuentre una persona con una edad menor de 49 años es de {round(edades[0], 4)}%')
+    print(f'La probabilidad de que se encuentre una persona con una edad entre 46 y 50 años es de {round(edades[1], 4)}%')
+    print(f'La probabilidad de que las horas trabajadas sea mayor que 29,5 horas es de {round(horarios[0], 4)}%')
+    print(f'La probabilidad de que las horas trabajadas sea menor que 26,5 horas es de {round(horarios[1], 4)}%')
 
 if __name__ == '__main__': 
     main()
