@@ -295,9 +295,27 @@ def mostar_resultados(datos : DataFrame, lista : list):
         esta = f'{esto["Race"]}-{esto["Sex"]}'
         try: fusion[esta] += 1
         except: fusion[esta] = 1
-    pprint(razas)
-    pprint(sexos)
-    pprint(fusion)
+    titulo = '| Categorías |'
+    for esto in razas.keys(): titulo += f' {esto} |'
+    titulo += ' Total |'
+    techo = '-' * len(titulo)
+    print(techo)
+    print(titulo)
+    for esto in sexos.keys(): 
+        titulo = f'| {esto} |'
+        for esta in razas.keys(): 
+            titulo += f' {fusion[f"{esta}-{esto}"]} |'
+        titulo += f' {sexos[esto]} |'
+        techo = '-' * len(titulo)
+        print(techo)
+        print(titulo)
+    titulo = '| Total |'
+    for esto in razas.values(): titulo += f' {esto} |'
+    titulo += f' {(sum(sexos.values()) + sum(razas.values())) / 2} |'
+    techo = '-' * len(titulo)
+    print(techo)
+    print(titulo)
+    print(techo)
 
 def main(): 
     primero()
