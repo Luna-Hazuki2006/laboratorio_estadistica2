@@ -239,7 +239,8 @@ def primero():
             sns.histplot(
                 datos,
                 x=esto,
-                multiple="stack",
+                multiple="stack", 
+                hue='Sex',
                 edgecolor=".3",
                 linewidth=.5,
                 log_scale=True,
@@ -252,7 +253,8 @@ def primero():
         sns.histplot(
             datos,
             x=esto,
-            multiple="stack",
+            multiple="layer", 
+            hue='Sex', 
             edgecolor=".3",
             linewidth=.5,
             log_scale=True, 
@@ -269,15 +271,23 @@ def primero():
         data = list(map(lambda x: x[esto], lista))
         todo = creacion(data)
         proceso(todo, esto)
+    mostar_resultados(datos)
 
-def main(): 
-    primero()
+def mostar_resultados(datos : DataFrame): 
     print(f'La probabilidad de que el salario sea mayor que 44 es de {round(salarios[0], 4)}%')
     print(f'La probabilidad de que el salario de una persona se encuentre entre 47 y 49 es de {round(salarios[1], 4)}%')
     print(f'La probabilidad de que se encuentre una persona con una edad menor de 49 años es de {round(edades[0], 4)}%')
     print(f'La probabilidad de que se encuentre una persona con una edad entre 46 y 50 años es de {round(edades[1], 4)}%')
     print(f'La probabilidad de que las horas trabajadas sea mayor que 29,5 horas es de {round(horarios[0], 4)}%')
     print(f'La probabilidad de que las horas trabajadas sea menor que 26,5 horas es de {round(horarios[1], 4)}%')
+    sns.set_theme()
+    # Load the example flights dataset and convert to long-form
+    sns.relplot(data=datos, x="Income", y="Age")
+    plt.show()
+
+
+def main(): 
+    primero()
 
 if __name__ == '__main__': 
     main()
