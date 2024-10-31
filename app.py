@@ -240,7 +240,7 @@ def primero():
                 datos,
                 x=esto,
                 multiple="stack", 
-                hue='Sex',
+                # hue='Sex',
                 edgecolor=".3",
                 linewidth=.5,
                 log_scale=True,
@@ -254,7 +254,7 @@ def primero():
             datos,
             x=esto,
             multiple="layer", 
-            hue='Sex', 
+            # hue='Sex', 
             edgecolor=".3",
             linewidth=.5,
             log_scale=True, 
@@ -271,20 +271,33 @@ def primero():
         data = list(map(lambda x: x[esto], lista))
         todo = creacion(data)
         proceso(todo, esto)
-    mostar_resultados(datos)
+    mostar_resultados(datos, lista)
 
-def mostar_resultados(datos : DataFrame): 
+def mostar_resultados(datos : DataFrame, lista : list): 
     print(f'La probabilidad de que el salario sea mayor que 44 es de {round(salarios[0], 4)}%')
     print(f'La probabilidad de que el salario de una persona se encuentre entre 47 y 49 es de {round(salarios[1], 4)}%')
     print(f'La probabilidad de que se encuentre una persona con una edad menor de 49 años es de {round(edades[0], 4)}%')
     print(f'La probabilidad de que se encuentre una persona con una edad entre 46 y 50 años es de {round(edades[1], 4)}%')
     print(f'La probabilidad de que las horas trabajadas sea mayor que 29,5 horas es de {round(horarios[0], 4)}%')
     print(f'La probabilidad de que las horas trabajadas sea menor que 26,5 horas es de {round(horarios[1], 4)}%')
-    sns.set_theme()
+    # sns.set_theme()
     # Load the example flights dataset and convert to long-form
-    sns.relplot(data=datos, x="Income", y="Age")
-    plt.show()
-
+    # sns.relplot(data=datos, x="Income", y="Age")
+    # plt.show()
+    razas = {}
+    sexos = {}
+    fusion = {}
+    for esto in lista: 
+        try: razas[esto['Race']] += 1
+        except: razas[esto['Race']] = 1
+        try: sexos[esto['Sex']] += 1
+        except: sexos[esto['Sex']] = 1
+        esta = f'{esto["Race"]}-{esto["Sex"]}'
+        try: fusion[esta] += 1
+        except: fusion[esta] = 1
+    pprint(razas)
+    pprint(sexos)
+    pprint(fusion)
 
 def main(): 
     primero()
