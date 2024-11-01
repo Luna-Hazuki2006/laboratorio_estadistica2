@@ -287,19 +287,19 @@ def mostar_resultados(datos : DataFrame, lista : list):
     razas = {}
     sexos = {}
     fusion = {}
-    horas = {}
-    años = {}
+    horas = []
+    años = []
     encuentro = {}
     pase = 0
     while pase <= 59: 
         actual = pase + 19
-        horas[f'{pase}-{actual}'] = sum(map(lambda x: x['Age'], filter(lambda y: y['Age'] <= actual and y['Age'] >= pase, lista)))
+        horas.append((pase, actual))
         pase = actual + 1
-    horas['más horas'] = sum(map(lambda x: x['Age'], filter(lambda y: y['Age'] > 59, lista)))
+    horas.append((59, 1000))
     pase = 14
     actual = 24
     while pase <= 94: 
-        años[f'{pase}-{actual}'] = sum(map(lambda x: x['HoursWk'], filter(lambda y: y['HoursWk'] <= actual and y['HoursWk'] >= pase, lista)))
+        años.append((pase, actual))
         pase = actual + 1
         actual = pase + 9
     for esto in lista: 
@@ -310,7 +310,11 @@ def mostar_resultados(datos : DataFrame, lista : list):
         esta = f'{esto["Race"]}-{esto["Sex"]}'
         try: fusion[esta] += 1
         except: fusion[esta] = 1
-        # Algo que obtenga las fusiones pero... no sé :v
+    for cada in años: 
+        for este in horas: 
+            parte = f'{cada[0]}-{cada[1]}/{este[0]}-{este[1]}'
+            encuentro[parte] = sum(map(lambda x: x['Age'] + x['HoursWk'], filter(lambda y: y['Age'] >= este[0] and y['Age'] <= este[1] and y['HoursWk'] >= cada[0] and y['HoursWk'] <= cada[1], lista)))
+        
 
     titulo = '| Categorías |'
     for esto in razas.keys(): titulo += f' {esto} |'
@@ -330,12 +334,26 @@ def mostar_resultados(datos : DataFrame, lista : list):
     for esto in razas.values(): titulo += f' {esto} |'
     titulo += f' {(sum(sexos.values()) + sum(razas.values())) / 2} |'
     techo = '-' * len(titulo)
+    print('/' * 50)
+    titulo = '| Categorías |'
+    for esto in horas: 
+        if esto == horas[-1]: 
+            titulo += ' Más horas |'
+            break
+        titulo += f' {esto[0]}-{esto[1]} |'
+    techo = '-' * len(titulo)
     print(techo)
     print(titulo)
+    for esto in años: 
+        titulo = f'| {esto[0]}-{esto[1]} |'
+        for esta in horas: 
+            titulo += f' {encuentro[f"{esto[0]}-{esto[1]}/{esta[0]}-{esta[1]}"]} |'
+        techo = '-' * len(titulo)
+        print(techo)
+        print(titulo)
     print(techo)
-    print('/' * 50)
-    pprint(horas)
-    pprint(años)
+
+    
 
 
 def main(): 
