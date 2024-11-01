@@ -310,6 +310,7 @@ def mostar_resultados(datos : DataFrame, lista : list):
         esta = f'{esto["Race"]}-{esto["Sex"]}'
         try: fusion[esta] += 1
         except: fusion[esta] = 1
+        # Algo que obtenga las fusiones pero... no sé :v
 
     titulo = '| Categorías |'
     for esto in razas.keys(): titulo += f' {esto} |'
