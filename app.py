@@ -287,6 +287,21 @@ def mostar_resultados(datos : DataFrame, lista : list):
     razas = {}
     sexos = {}
     fusion = {}
+    horas = {}
+    años = {}
+    encuentro = {}
+    pase = 0
+    while pase <= 59: 
+        actual = pase + 19
+        horas[f'{pase}-{actual}'] = sum(map(lambda x: x['Age'], filter(lambda y: y['Age'] <= actual and y['Age'] >= pase, lista)))
+        pase = actual + 1
+    horas['más horas'] = sum(map(lambda x: x['Age'], filter(lambda y: y['Age'] > 59, lista)))
+    pase = 14
+    actual = 24
+    while pase <= 94: 
+        años[f'{pase}-{actual}'] = sum(map(lambda x: x['HoursWk'], filter(lambda y: y['HoursWk'] <= actual and y['HoursWk'] >= pase, lista)))
+        pase = actual + 1
+        actual = pase + 9
     for esto in lista: 
         try: razas[esto['Race']] += 1
         except: razas[esto['Race']] = 1
@@ -295,6 +310,7 @@ def mostar_resultados(datos : DataFrame, lista : list):
         esta = f'{esto["Race"]}-{esto["Sex"]}'
         try: fusion[esta] += 1
         except: fusion[esta] = 1
+
     titulo = '| Categorías |'
     for esto in razas.keys(): titulo += f' {esto} |'
     titulo += ' Total |'
@@ -316,6 +332,10 @@ def mostar_resultados(datos : DataFrame, lista : list):
     print(techo)
     print(titulo)
     print(techo)
+    print('/' * 50)
+    pprint(horas)
+    pprint(años)
+
 
 def main(): 
     primero()
