@@ -181,7 +181,7 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     print(f'Índice de asimetría: {round(indice, 4)} ({simetria})')
     plt.pie(todo[0]['fi'], labels=list(map(lambda x: f'{x["minimo"]}-{x["maximo"]}', todo[0]['clase'])), autopct='%.0f%%')
     plt.title(nombre)
-    plt.show()
+    # plt.show()
     print('++++++++++++++++++++++++++++++++++++++++++++')
     print('**********************************************')
     if nombre == 'Income': 
@@ -247,7 +247,7 @@ def primero():
             )
             ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
             # ax.set_xticks([500, 1000, 2000, 5000, 10000])
-            plt.show()
+            # plt.show()
             continue
         datos = DataFrame(data=list(map(lambda x: dict(map(lambda y: (y[0], 0.5) if y[0] == esto and y[1] <= 0 else y, x.items())), lista)))
         sns.histplot(
@@ -262,18 +262,25 @@ def primero():
         )
         ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
         # ax.set_xticks([500, 1000, 2000, 5000, 10000])
-        plt.show()
+        # plt.show()
         sns.displot(datos, x=esto, kind="ecdf")
-        plt.show()
+        # plt.show()
         print('*' * 30)
         print(f'[{esto}]')
         print('*' * 30)
         data = list(map(lambda x: x[esto], lista))
         todo = creacion(data)
         proceso(todo, esto)
-    mostar_resultados(datos, lista)
+    mostar_resultados(lista)
 
-def mostar_resultados(datos : DataFrame, lista : list): 
+def informacion(lista : list): 
+    total = lista[0]['fa'][-1]
+    media = sum(lista[0]['fi.xi']) / total
+    varianza = (sum(lista[0]['fi.xi^2']) / total) - (media**2)
+    desviacion = math.sqrt(varianza)
+    return total, media, desviacion
+
+def mostar_resultados(lista : list): 
     print(f'La probabilidad de que el salario sea mayor que 44 es de {round(salarios[0], 4)}%')
     print(f'La probabilidad de que el salario de una persona se encuentre entre 47 y 49 es de {round(salarios[1], 4)}%')
     print(f'La probabilidad de que se encuentre una persona con una edad menor de 49 años es de {round(edades[0], 4)}%')
@@ -310,7 +317,9 @@ def mostar_resultados(datos : DataFrame, lista : list):
         esta = f'{esto["Race"]}-{esto["Sex"]}'
         try: fusion[esta] += 1
         except: fusion[esta] = 1
+    # "cada" significa un rango de años
     for cada in años: 
+        # "este" significa un rango de horas
         for este in horas: 
             parte = f'{cada[0]}-{cada[1]}/{este[0]}-{este[1]}'
             encuentro[parte] = sum(map(lambda x: x['Age'] + x['HoursWk'], filter(lambda y: y['Age'] >= este[0] and y['Age'] <= este[1] and y['HoursWk'] >= cada[0] and y['HoursWk'] <= cada[1], lista)))
@@ -334,6 +343,9 @@ def mostar_resultados(datos : DataFrame, lista : list):
     for esto in razas.values(): titulo += f' {esto} |'
     titulo += f' {(sum(sexos.values()) + sum(razas.values())) / 2} |'
     techo = '-' * len(titulo)
+    print(techo)
+    print(titulo)
+    print(techo)
     print('/' * 50)
     titulo = '| Categorías |'
     for esto in horas: 
@@ -347,13 +359,53 @@ def mostar_resultados(datos : DataFrame, lista : list):
     for esto in años: 
         titulo = f'| {esto[0]}-{esto[1]} |'
         for esta in horas: 
-            titulo += f' {encuentro[f"{esto[0]}-{esto[1]}/{esta[0]}-{esta[1]}"]} |'
+            titulo += f' {int(encuentro[f"{esto[0]}-{esto[1]}/{esta[0]}-{esta[1]}"])} |'
         techo = '-' * len(titulo)
         print(techo)
         print(titulo)
     print(techo)
-
-    
+    print('/' * 50)
+    pagos = list(map(lambda x: x['Income'], lista))
+    grupo1 = random.sample(pagos, 500)
+    grupo2 = random.sample(pagos, 500)
+    grupo3 = random.sample(pagos, 600)
+    grupos = [['Grupo 1', grupo1], ['Grupo 2', grupo2], ['Grupo 3', grupo3]]
+    titulo = '| Nombre | Cantidad | Media aritmética | Desviación típica |'
+    techo = '-' * len(titulo)
+    print(techo)
+    print(titulo)
+    print(techo)
+    for grupo in grupos: 
+        mejorado = creacion(grupo[1])
+        total, media, desviacion = informacion(mejorado)
+        grupo.append((total, media, desviacion))
+        titulo = f'| {grupo[0]} | {total} | {round(media, 4)} | {round(desviacion, 4)} |'
+        techo = '-' * len(titulo)
+        print(titulo)
+        print(techo)
+    zcal = (grupos[0][2][1] - grupos[1][2][1]) / math.sqrt(((grupos[0][2][2] ** 2) / grupos[0][2][0]) + ((grupos[1][2][2] ** 2) / grupos[1][2][0]))
+    ztab = 1.65
+    if -ztab < zcal < ztab: 
+        print(f'Ha (hipótesis alterna) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que las primerass muestras de salarios se comportan diferente')
+    else: print('Ho (hipótesis nula) fue aceptada, esto quiere decir que las dos primeras muestras de salarios se comportan igual')
+    zcal = (grupos[1][2][1] - grupos[2][2][1]) / math.sqrt(((grupos[1][2][2] ** 2) / grupos[1][2][0]) + ((grupos[2][2][2] ** 2) / grupos[2][2][0]))
+    ztab = 2.33
+    if -ztab < zcal < ztab: 
+        print(f'Ha (hipótesis alterna) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos últimas muestras de salario no se comportan igual')
+    else: print('Ho (hipótesis nula) fue aceptada, esto quiere decir que las dos últimas muestras de salarios se comportan igual')
+    años = list(map(lambda x: x['Age'], lista))
+    edad1 = random.sample(años, 300)
+    edad2 = random.sample(años, 400)
+    partes =[[edad1], [edad2]]
+    for edad in partes: 
+        mejorado = creacion(edad[0])
+        total, media, desviacion = informacion(mejorado)
+        edad.append((total, media, desviacion))
+    zcal = (partes[0][1][1] - partes[1][1][1]) / math.sqrt(((partes[0][1][2] ** 2) / partes[0][1][0]) + ((partes[1][1][2] ** 2) / partes[1][1][0]))
+    ztab = 1.29
+    if -ztab < zcal < ztab: 
+        print(f'Ha (hipótesis alterna), ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos muestras edades se comportan de formas distintas')
+    else: print('Ho (hipótesis nula) fue aceptada, esto quiere decir que las dos muestas de edades se comportan de forma igual')
 
 
 def main(): 
