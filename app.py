@@ -45,7 +45,7 @@ def mostrar_tabla(todo : dict):
                 minimo = todo[esto][i]['minimo']
                 maximo = todo[esto][i]['maximo']
                 texto += f' {minimo}-{maximo} |'
-            else: texto += f' {todo[esto][i]} |'
+            else: texto += f' {round(todo[esto][i], 4)} |'
         print(len(texto) * '-')
         print(texto)
     print(len(texto) * '-')
@@ -181,7 +181,7 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     print(f'Índice de asimetría: {round(indice, 4)} ({simetria})')
     plt.pie(todo[0]['fi'], labels=list(map(lambda x: f'{x["minimo"]}-{x["maximo"]}', todo[0]['clase'])), autopct='%.0f%%')
     plt.title(nombre)
-    # plt.show()
+    plt.show()
     print('++++++++++++++++++++++++++++++++++++++++++++')
     print('**********************************************')
     if nombre == 'Income': 
@@ -247,7 +247,7 @@ def primero():
             )
             ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
             # ax.set_xticks([500, 1000, 2000, 5000, 10000])
-            # plt.show()
+            plt.show()
             continue
         datos = DataFrame(data=list(map(lambda x: dict(map(lambda y: (y[0], 0.5) if y[0] == esto and y[1] <= 0 else y, x.items())), lista)))
         sns.histplot(
@@ -262,9 +262,9 @@ def primero():
         )
         ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
         # ax.set_xticks([500, 1000, 2000, 5000, 10000])
-        # plt.show()
+        plt.show()
         sns.displot(datos, x=esto, kind="ecdf")
-        # plt.show()
+        plt.show()
         print('*' * 30)
         print(f'[{esto}]')
         print('*' * 30)
@@ -386,13 +386,17 @@ def mostar_resultados(lista : list):
     zcal = (grupos[0][2][1] - grupos[1][2][1]) / math.sqrt(((grupos[0][2][2] ** 2) / grupos[0][2][0]) + ((grupos[1][2][2] ** 2) / grupos[1][2][0]))
     ztab = 1.65
     if -ztab < zcal < ztab: 
-        print(f'Ha (hipótesis alterna) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que las primerass muestras de salarios se comportan diferente')
-    else: print('Ho (hipótesis nula) fue aceptada, esto quiere decir que las dos primeras muestras de salarios se comportan igual')
+        print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que las primerass muestras de salarios se comportan iguales')
+    else: 
+        texto = f'{zcal} > {ztab}' if zcal > ztab else f'{zcal} < {-ztab}'
+        print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos primeras muestras de salarios se comportan de formas diferentes')
     zcal = (grupos[1][2][1] - grupos[2][2][1]) / math.sqrt(((grupos[1][2][2] ** 2) / grupos[1][2][0]) + ((grupos[2][2][2] ** 2) / grupos[2][2][0]))
     ztab = 2.33
     if -ztab < zcal < ztab: 
-        print(f'Ha (hipótesis alterna) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos últimas muestras de salario no se comportan igual')
-    else: print('Ho (hipótesis nula) fue aceptada, esto quiere decir que las dos últimas muestras de salarios se comportan igual')
+        print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos últimas muestras de salario se comportan igual')
+    else: 
+        texto = f'{zcal} > {ztab}' if zcal > ztab else f'{zcal} < {-ztab}'
+        print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos últimas muestras de salarios se comportan de formas diferentes')
     años = list(map(lambda x: x['Age'], lista))
     edad1 = random.sample(años, 300)
     edad2 = random.sample(años, 400)
@@ -404,8 +408,10 @@ def mostar_resultados(lista : list):
     zcal = (partes[0][1][1] - partes[1][1][1]) / math.sqrt(((partes[0][1][2] ** 2) / partes[0][1][0]) + ((partes[1][1][2] ** 2) / partes[1][1][0]))
     ztab = 1.29
     if -ztab < zcal < ztab: 
-        print(f'Ha (hipótesis alterna), ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos muestras edades se comportan de formas distintas')
-    else: print('Ho (hipótesis nula) fue aceptada, esto quiere decir que las dos muestas de edades se comportan de forma igual')
+        print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos muestras edades se comportan de formas similares')
+    else: 
+        texto = f'{zcal} > {ztab}' if zcal > ztab else f'{zcal} < {-ztab}'
+        print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos muestas de edades se comportan de forma diferente')
 
 
 def main(): 
