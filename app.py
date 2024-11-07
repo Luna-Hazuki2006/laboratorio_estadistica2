@@ -408,21 +408,36 @@ que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el 
     zcal = (grupos[0][2][1] - grupos[1][2][1]) / math.sqrt(((grupos[0][2][2] ** 2) / grupos[0][2][0]) + ((grupos[1][2][2] ** 2) / grupos[1][2][0]))
     ztab = 1.65
     if -ztab < zcal < ztab: 
-        print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que las primerass muestras de salarios se comportan iguales')
+        print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que las primeras muestras de salarios se comportan iguales')
     else: 
-        texto = f'{round(zcal, 2)} > {ztab}' if zcal > ztab else f'{round(zcal, 2)} < {-ztab}'
+        texto = f'(zcal) {round(zcal, 2)} > (ztab) {ztab}' if zcal > ztab else f'(zcal) {round(zcal, 2)} < (ztab) {-ztab}'
         print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos primeras muestras de salarios se comportan de formas diferentes')
     zcal = (grupos[1][2][1] - grupos[2][2][1]) / math.sqrt(((grupos[1][2][2] ** 2) / grupos[1][2][0]) + ((grupos[2][2][2] ** 2) / grupos[2][2][0]))
     ztab = 2.33
     if -ztab < zcal < ztab: 
         print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos últimas muestras de salario se comportan igual')
     else: 
-        texto = f'{round(zcal, 2)} > {ztab}' if zcal > ztab else f'{round(zcal, 2)} < {-ztab}'
+        texto = f'(zcal) {round(zcal, 2)} > (ztab) {ztab}' if zcal > ztab else f'(zcal) {round(zcal, 2)} < (ztab) {-ztab}'
         print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos últimas muestras de salarios se comportan de formas diferentes')
+    print('/' * 50)
     años = list(map(lambda x: x['Age'], lista))
     edad1 = random.sample(años, 300)
     edad2 = random.sample(años, 400)
     partes =[[edad1], [edad2]]
+    grupos = [['Grupo 1', edad1], ['Grupo 2', edad2]]
+    titulo = '| Nombre | Cantidad | Media aritmética | Desviación típica |'
+    techo = '-' * len(titulo)
+    print(techo)
+    print(titulo)
+    print(techo)
+    for grupo in grupos: 
+        mejorado = creacion(grupo[1])
+        total, media, desviacion = informacion(mejorado)
+        grupo.append((total, media, desviacion))
+        titulo = f'| {grupo[0]} | {total} | {round(media, 4)} | {round(desviacion, 4)} |'
+        techo = '-' * len(titulo)
+        print(titulo)
+        print(techo)
     for edad in partes: 
         mejorado = creacion(edad[0])
         total, media, desviacion = informacion(mejorado)
@@ -432,7 +447,7 @@ que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el 
     if -ztab < zcal < ztab: 
         print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos muestras edades se comportan de formas similares')
     else: 
-        texto = f'{round(zcal, 2)} > {ztab}' if zcal > ztab else f'{round(zcal, 2)} < {-ztab}'
+        texto = f'(zcal) {round(zcal, 2)} > (ztab) {ztab}' if zcal > ztab else f'(zcal) {round(zcal, 2)} < (ztab) {-ztab}'
         print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos muestas de edades se comportan de forma diferente')
 
 
