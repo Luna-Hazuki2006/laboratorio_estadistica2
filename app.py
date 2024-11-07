@@ -7,7 +7,7 @@ import scipy.stats as st
 import matplotlib.pyplot as plt
 from pandas import DataFrame
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.requests import Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from pprint import pprint
@@ -17,6 +17,10 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="./static"), name="static")
 
 templates = Jinja2Templates(directory="./templates")
+
+tablas = []
+
+diagramas = []
 
 lista = []
 
@@ -119,19 +123,27 @@ def creacion(r : list):
     return oficial
 
 def proceso(todo : list, nombre : str): 
+    resultados = []
     mostrar_tabla(todo[0])
     total = todo[0]['fa'][-1]
     # print(f'Total {total}')
     a = todo[0]['clase'][0]['maximo'] - todo[0]['clase'][0]['minimo'] 
     # print(f"Sum: {sum(todo[0]['fi.xi'])}")
+    parte = []
+    titulo = 'Variables de posición: '
     print('Variables de posición: ')
     cuartiles = []
     for i in range(1, 5): 
         q = obtencion(todo[0], ((25 * i) / 100) * total)
+        parte.append(f'Q{i}: {round(q, 4)}')
         print(f'Q{i}: {round(q, 4)}')
         cuartiles.append(q)
+    resultados.append((titulo, parte))
+    titulo = 'Variables de centralización: '
+    parte = []
     print('Variables de centralización: ')
     media = sum(todo[0]['fi.xi']) / total
+    parte.append(f'Media aritmética: {round(media, 4)}')
     print(f'Media aritmética: {round(media, 4)}')
     calculo = total / 2
     fa = 0
@@ -149,6 +161,7 @@ def proceso(todo : list, nombre : str):
     fi = todo[0]['fi'][indice]
     # print(f'fi: {fi}')
     mediana = li + ((calculo - fi_menos) / fi) * a
+    parte.append(f'Mediana: {round(mediana, 4)}')
     print(f'Mediana: {round(mediana, 4)}')
     lugares_modales = buscar_modales(todo[0]['fi'])
     modales = []
@@ -169,11 +182,17 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
 "''')
             modal = li + a
         modales.append(round(modal, 4))
+    parte.append(f'Modales: {modales}')
     print(f'Modales: {modales}')
+    resultados.append((titulo, parte))
+    titulo = 'Variables de variabilidad: '
+    parte = []
     print('Variables de variabilidad: ')
     varianza = (sum(todo[0]['fi.xi^2']) / total) - (media**2)
+    parte.append(f'Varianza: {round(varianza, 4)}')
     print(f'Varianza: {round(varianza, 4)}')
     desviacion = math.sqrt(varianza)
+    parte.append(f'Desviación estándar: {round(desviacion, 4)}')
     print(f'Desviación estándar: {round(desviacion, 4)}')
     intercuartil = cuartiles[2] - cuartiles[0]
     p75 = obtencion(todo[0], (75 / 100) * total)
@@ -182,20 +201,32 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     p10 = obtencion(todo[0], (10 / 100) * total)
     curtosis = ((p75 - p25) / (p90 - p10)) * 0.5
     coeficiente = (desviacion / media) * 100
+    parte.append(f'Coeficiente de variación: {round(coeficiente, 4)}%')
     print(f'Coeficiente de variación: {round(coeficiente, 4)}%')
+    parte.append(f'Rango intercuartil: {round(intercuartil, 4)}')
     print(f'Rango intercuartil: {round(intercuartil, 4)}')
+    resultados.append((titulo, parte))
+    parte = []
+    titulo = 'variables de forma: '
     print('variables de forma: ')
     indice = (3 * (media - mediana)) / desviacion
     if curtosis == 0: apuntamiento = 'Es mesocúrtica como la normal'
     elif curtosis > 0: apuntamiento = 'Es leptocúrtica apuntada'
     elif curtosis < 0: apuntamiento = 'Es platicúrtica aplanada'
+    parte.append(f'Curtosis: {round(curtosis, 4)} ({apuntamiento})')
     print(f'Curtosis: {round(curtosis, 4)} ({apuntamiento})')
     if indice == 0: simetria = 'Es simétrica'
     elif indice > 0: simetria = 'Es asimétrica positiva con sesgo a la derecha'
     elif indice < 0: simetria = 'Es asimétrica negativa con sesgo a la izquierda'
+    parte.append(f'Índice de asimetría: {round(indice, 4)} ({simetria})')
     print(f'Índice de asimetría: {round(indice, 4)} ({simetria})')
+    resultados.append((titulo, parte))
+    f, ax = plt.subplots(figsize=(7, 5))
+    sns.despine(f)
     plt.pie(todo[0]['fi'], labels=list(map(lambda x: f'{x["minimo"]}-{x["maximo"]}', todo[0]['clase'])), autopct='%.0f%%')
     plt.title(nombre)
+    diagramas.append(f'./static/{nombre}-pie.png')
+    plt.savefig(f'./static/{nombre}-pie.png')
     # plt.show()
     print('++++++++++++++++++++++++++++++++++++++++++++')
     print('**********************************************')
@@ -214,6 +245,7 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
         horarios.append(data)
         data = st.norm.cdf((26.5 - media) / desviacion) * 100
         horarios.append(data)
+    return resultados
 
 grande = ['Age', 'Income', 'HoursWk']
 
@@ -247,21 +279,22 @@ def primero():
         lista = list(map(lambda x: dict(map(lambda y: (y[0], float(y[1])) if prueba(y[1], y[0]) else seleccion(y), x.items())), csv.DictReader(archivo)))
     datos = DataFrame(data=lista)
     sns.set_theme(style='whitegrid')
-    f, ax = plt.subplots(figsize=(7, 5))
-    sns.despine(f)
     for esto in lista[0].keys(): 
         if esto not in grande: 
+            f, ax = plt.subplots(figsize=(7, 5))
+            sns.despine(f)
             sns.histplot(
                 datos,
                 x=esto,
-                multiple="stack", 
-                # hue='Sex',
+                multiple="layer", 
+                # hue=esto, 
                 edgecolor=".3",
                 linewidth=.5,
                 log_scale=True,
             )
-            ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
-            f.savefig(f'/static/{esto}-histplot.png')
+            # ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+            diagramas.append(f'./static/{esto}-histplot.png')
+            f.savefig(f'./static/{esto}-histplot.png')
             # ax.set_xticks([500, 1000, 2000, 5000, 10000])
             # plt.show()
             continue
@@ -271,6 +304,8 @@ def primero():
         print('*' * 30)
         data = list(map(lambda x: x[esto], lista))
         todo = creacion(data)
+        f, ax = plt.subplots(figsize=(7, 5))
+        sns.despine(f)
         sns.histplot(
             datos,
             x=esto,
@@ -281,14 +316,20 @@ def primero():
             log_scale=True, 
             kde=True
         )
+        # ax.set_xticks(list(map(lambda x: x['minimo'], todo[0]['clase'])))
+        diagramas.append(f'./static/{esto}-histplot.png')
+        f.savefig(f'./static/{esto}-histplot.png')
         # ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
         # pprint(todo)
         # ax.set_xticks(list(map(lambda x: x['minimo'], todo[0]['clase'])))
-        # ax.set_xticks([500, 1000, 2000, 5000, 10000])
         # plt.show()
-        sns.displot(datos, x=esto, kind="ecdf")
+        f, ax = plt.subplots(figsize=(7, 5))
+        sns.despine(f)
+        sns.ecdfplot(datos, x=esto)
+        f.savefig(f'./static/{esto}-ecdfplot.png')
         # plt.show()
-        proceso(todo, esto)
+        resultados = proceso(todo, esto)
+        tablas.append((esto, todo, resultados))
     mostar_resultados(lista)
 
 def informacion(lista : list): 
@@ -462,12 +503,13 @@ que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el 
         print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos muestas de edades se comportan de forma diferente')
 
 
-def main(): 
-    primero()
+# def main(): 
+#     primero()
 
-# @app.get('/')
-# def mostrar(): 
-#     return
+@app.get('/')
+def mostrar(request : Request):
+    primero() 
+    return templates.TemplateResponse('index.html', {'request': request, 'tablas': tablas, 'diagramas': diagramas[:14]})
 
-if __name__ == '__main__': 
-    main()
+# if __name__ == '__main__': 
+#     main()
