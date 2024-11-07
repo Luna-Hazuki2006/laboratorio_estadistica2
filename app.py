@@ -521,17 +521,17 @@ que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el 
     zcal = (grupos[0][2][1] - grupos[1][2][1]) / math.sqrt(((grupos[0][2][2] ** 2) / grupos[0][2][0]) + ((grupos[1][2][2] ** 2) / grupos[1][2][0]))
     ztab = 1.65
     if -ztab < zcal < ztab: 
-        explicacion.append(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que entre las primeras muestras de salarios no hay variabilidad')
+        explicacion.append(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que entre las primeras muestras de salarios no hay variabilidad.')
     else: 
         texto = f'(zcal) {round(zcal, 2)} > (ztab) {ztab}' if zcal > ztab else f'(zcal) {round(zcal, 2)} < (ztab) {-ztab}'
-        explicacion.append(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que entre las dos primeras muestras de salarios hay una gran variabilidad')
+        explicacion.append(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que entre las dos primeras muestras de salarios hay una gran variabilidad.')
     zcal = (grupos[1][2][1] - grupos[2][2][1]) / math.sqrt(((grupos[1][2][2] ** 2) / grupos[1][2][0]) + ((grupos[2][2][2] ** 2) / grupos[2][2][0]))
     ztab = 2.33
     if -ztab < zcal < ztab: 
-        explicacion.append(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que entre las dos últimas muestras de salario no hay variabilidad')
+        explicacion.append(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que entre las dos últimas muestras de salario no hay variabilidad.')
     else: 
         texto = f'(zcal) {round(zcal, 2)} > (ztab) {ztab}' if zcal > ztab else f'(zcal) {round(zcal, 2)} < (ztab) {-ztab}'
-        explicacion.append(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que entre las dos últimas muestras de salarios hay una gran variabilidad')
+        explicacion.append(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que entre las dos últimas muestras de salarios hay una gran variabilidad.')
     print('/' * 50)
     hipotesis_salarios.append(filas)
     hipotesis_salarios.append(explicacion)
@@ -574,10 +574,10 @@ que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el 
     zcal = (partes[0][1][1] - partes[1][1][1]) / math.sqrt(((partes[0][1][2] ** 2) / partes[0][1][0]) + ((partes[1][1][2] ** 2) / partes[1][1][0]))
     ztab = 1.29
     if -ztab < zcal < ztab: 
-        explicacion.append(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos muestras edades se comportan de formas similares')
+        explicacion.append(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que entre las dos muestras edades no se encuentra variabilidad.')
     else: 
         texto = f'(zcal) {round(zcal, 2)} > (ztab) {ztab}' if zcal > ztab else f'(zcal) {round(zcal, 2)} < (ztab) {-ztab}'
-        explicacion.append(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos muestas de edades se comportan de forma diferente')
+        explicacion.append(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que entre las dos muestas de edades hay una gran variabilidad.')
     hipotesis_edades.append(filas)
     hipotesis_edades.append(explicacion)
 
