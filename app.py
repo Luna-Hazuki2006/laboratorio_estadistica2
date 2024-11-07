@@ -129,10 +129,15 @@ def proceso(todo : list, nombre : str):
         if esto >= calculo: 
             fa = esto
             break
+    # print(f'fa: {fa}')
     indice = todo[0]['fa'].index(fa)
+    # print(f'índice: {indice}')
     li = todo[0]['clase'][indice]['minimo']
-    fi_menos = todo[0]['fa'][indice - 1]
+    # print(f'li: {li}')
+    fi_menos = todo[0]['fa'][indice - 1] if indice != 0 else 0
+    # print(f'fi menos: {fi_menos}')
     fi = todo[0]['fi'][indice]
+    # print(f'fi: {fi}')
     mediana = li + ((calculo - fi_menos) / fi) * a
     print(f'Mediana: {round(mediana, 4)}')
     lugares_modales = buscar_modales(todo[0]['fi'])
@@ -167,7 +172,7 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     p10 = obtencion(todo[0], (10 / 100) * total)
     curtosis = ((p75 - p25) / (p90 - p10)) * 0.5
     coeficiente = (desviacion / media) * 100
-    print(f'Coeficiente de variación: {round(coeficiente, 4)}')
+    print(f'Coeficiente de variación: {round(coeficiente, 4)}%')
     print(f'Rango intercuartil: {round(intercuartil, 4)}')
     print('variables de forma: ')
     indice = (3 * (media - mediana)) / desviacion
@@ -181,7 +186,7 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     print(f'Índice de asimetría: {round(indice, 4)} ({simetria})')
     plt.pie(todo[0]['fi'], labels=list(map(lambda x: f'{x["minimo"]}-{x["maximo"]}', todo[0]['clase'])), autopct='%.0f%%')
     plt.title(nombre)
-    plt.show()
+    # plt.show()
     print('++++++++++++++++++++++++++++++++++++++++++++')
     print('**********************************************')
     if nombre == 'Income': 
@@ -231,7 +236,7 @@ def primero():
     with open('Datos proyecto 2024.csv', 'r') as archivo: 
         lista = list(map(lambda x: dict(map(lambda y: (y[0], float(y[1])) if prueba(y[1], y[0]) else seleccion(y), x.items())), csv.DictReader(archivo)))
     datos = DataFrame(data=lista)
-    sns.set_theme(style="ticks")
+    sns.set_theme(style='whitegrid')
     f, ax = plt.subplots(figsize=(7, 5))
     sns.despine(f)
     for esto in lista[0].keys(): 
@@ -247,9 +252,14 @@ def primero():
             )
             ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
             # ax.set_xticks([500, 1000, 2000, 5000, 10000])
-            plt.show()
+            # plt.show()
             continue
         datos = DataFrame(data=list(map(lambda x: dict(map(lambda y: (y[0], 0.5) if y[0] == esto and y[1] <= 0 else y, x.items())), lista)))
+        print('*' * 30)
+        print(f'[{esto}]')
+        print('*' * 30)
+        data = list(map(lambda x: x[esto], lista))
+        todo = creacion(data)
         sns.histplot(
             datos,
             x=esto,
@@ -260,16 +270,13 @@ def primero():
             log_scale=True, 
             kde=True
         )
-        ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+        # ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+        # pprint(todo)
+        # ax.set_xticks(list(map(lambda x: x['minimo'], todo[0]['clase'])))
         # ax.set_xticks([500, 1000, 2000, 5000, 10000])
-        plt.show()
+        # plt.show()
         sns.displot(datos, x=esto, kind="ecdf")
-        plt.show()
-        print('*' * 30)
-        print(f'[{esto}]')
-        print('*' * 30)
-        data = list(map(lambda x: x[esto], lista))
-        todo = creacion(data)
+        # plt.show()
         proceso(todo, esto)
     mostar_resultados(lista)
 
@@ -302,7 +309,7 @@ def mostar_resultados(lista : list):
         actual = pase + 19
         horas.append((pase, actual))
         pase = actual + 1
-    horas.append((59, 1000))
+    horas.append((59, 2000))
     pase = 14
     actual = 24
     while pase <= 94: 
@@ -322,32 +329,39 @@ def mostar_resultados(lista : list):
         # "este" significa un rango de horas
         for este in horas: 
             parte = f'{cada[0]}-{cada[1]}/{este[0]}-{este[1]}'
-            encuentro[parte] = sum(map(lambda x: x['Age'] + x['HoursWk'], filter(lambda y: y['Age'] >= este[0] and y['Age'] <= este[1] and y['HoursWk'] >= cada[0] and y['HoursWk'] <= cada[1], lista)))
-        
+            encuentro[parte] = len(list(filter(lambda y: round(y['Age']) >= cada[0] and round(y['Age']) <= cada[1] and round(y['HoursWk']) >= este[0] and round(y['HoursWk']) <= este[1], lista)))
 
-    titulo = '| Categorías |'
+    titulo = '| Categorías\t |'
     for esto in razas.keys(): titulo += f' {esto} |'
     titulo += ' Total |'
     techo = '-' * len(titulo)
     print(techo)
     print(titulo)
     for esto in sexos.keys(): 
-        titulo = f'| {esto} |'
+        titulo = f'| {esto}\t |'
         for esta in razas.keys(): 
-            titulo += f' {fusion[f"{esta}-{esto}"]} |'
-        titulo += f' {sexos[esto]} |'
+            titulo += f' {fusion[f"{esta}-{esto}"]}\t |'
+        titulo += f' {sexos[esto]}\t |'
         techo = '-' * len(titulo)
         print(techo)
         print(titulo)
-    titulo = '| Total |'
-    for esto in razas.values(): titulo += f' {esto} |'
-    titulo += f' {(sum(sexos.values()) + sum(razas.values())) / 2} |'
+    titulo = '| Total\t\t |'
+    for esto in razas.values(): titulo += f' {esto}\t |'
+    titulo += f' {(sum(sexos.values()) + sum(razas.values())) / 2}\t |'
     techo = '-' * len(titulo)
     print(techo)
     print(titulo)
     print(techo)
+    mayor = max(fusion.values())
+    categoria = list(filter(lambda x: x[1] == mayor, fusion.items()))[0]
+    hablas = categoria[0].split('-')
+    porcentaje = (100 * mayor) / sum(fusion.values())
+    print(f'''
+Gracias a esta tabla se puede notar que la mayor parte de fuerza laboral está compuesta de {mayor} personas 
+que son de raza "{hablas[0]}" y sexo "{hablas[1]}", esta siendo el {round(porcentaje, 2)}% de la muestra la mayoría.
+''')
     print('/' * 50)
-    titulo = '| Categorías |'
+    titulo = '| Categorías\t |'
     for esto in horas: 
         if esto == horas[-1]: 
             titulo += ' Más horas |'
@@ -357,13 +371,21 @@ def mostar_resultados(lista : list):
     print(techo)
     print(titulo)
     for esto in años: 
-        titulo = f'| {esto[0]}-{esto[1]} |'
+        titulo = f'| {esto[0]}-{esto[1]}\t\t |'
         for esta in horas: 
-            titulo += f' {int(encuentro[f"{esto[0]}-{esto[1]}/{esta[0]}-{esta[1]}"])} |'
+            titulo += f' {int(encuentro[f"{esto[0]}-{esto[1]}/{esta[0]}-{esta[1]}"])}\t |'
         techo = '-' * len(titulo)
         print(techo)
         print(titulo)
     print(techo)
+    mayor = max(encuentro.values())
+    categoria = list(filter(lambda x: x[1] == mayor, encuentro.items()))[0]
+    hablas = categoria[0].split('/')
+    porcentaje = (mayor * 100) / 2000
+    print(f'''
+Gracias a esta tabla se puede notar que la mayor parte de fuerza laboral está compuesta de {mayor} personas 
+que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el {round(porcentaje, 2)}% de la muestra.
+''')
     print('/' * 50)
     pagos = list(map(lambda x: x['Income'], lista))
     grupo1 = random.sample(pagos, 500)
@@ -388,14 +410,14 @@ def mostar_resultados(lista : list):
     if -ztab < zcal < ztab: 
         print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que las primerass muestras de salarios se comportan iguales')
     else: 
-        texto = f'{zcal} > {ztab}' if zcal > ztab else f'{zcal} < {-ztab}'
+        texto = f'{round(zcal, 2)} > {ztab}' if zcal > ztab else f'{round(zcal, 2)} < {-ztab}'
         print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos primeras muestras de salarios se comportan de formas diferentes')
     zcal = (grupos[1][2][1] - grupos[2][2][1]) / math.sqrt(((grupos[1][2][2] ** 2) / grupos[1][2][0]) + ((grupos[2][2][2] ** 2) / grupos[2][2][0]))
     ztab = 2.33
     if -ztab < zcal < ztab: 
         print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos últimas muestras de salario se comportan igual')
     else: 
-        texto = f'{zcal} > {ztab}' if zcal > ztab else f'{zcal} < {-ztab}'
+        texto = f'{round(zcal, 2)} > {ztab}' if zcal > ztab else f'{round(zcal, 2)} < {-ztab}'
         print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos últimas muestras de salarios se comportan de formas diferentes')
     años = list(map(lambda x: x['Age'], lista))
     edad1 = random.sample(años, 300)
@@ -410,7 +432,7 @@ def mostar_resultados(lista : list):
     if -ztab < zcal < ztab: 
         print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos muestras edades se comportan de formas similares')
     else: 
-        texto = f'{zcal} > {ztab}' if zcal > ztab else f'{zcal} < {-ztab}'
+        texto = f'{round(zcal, 2)} > {ztab}' if zcal > ztab else f'{round(zcal, 2)} < {-ztab}'
         print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos muestas de edades se comportan de forma diferente')
 
 
