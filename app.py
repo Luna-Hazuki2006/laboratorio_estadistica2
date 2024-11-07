@@ -6,7 +6,17 @@ import matplotlib as mpl
 import scipy.stats as st
 import matplotlib.pyplot as plt
 from pandas import DataFrame
+from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 from pprint import pprint
+
+app = FastAPI()
+
+app.mount("/static", StaticFiles(directory="./static"), name="static")
+
+templates = Jinja2Templates(directory="./templates")
 
 lista = []
 
@@ -251,6 +261,7 @@ def primero():
                 log_scale=True,
             )
             ax.xaxis.set_major_formatter(mpl.ticker.ScalarFormatter())
+            f.savefig(f'/static/{esto}-histplot.png')
             # ax.set_xticks([500, 1000, 2000, 5000, 10000])
             # plt.show()
             continue
@@ -453,6 +464,10 @@ que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el 
 
 def main(): 
     primero()
+
+# @app.get('/')
+# def mostrar(): 
+#     return
 
 if __name__ == '__main__': 
     main()
