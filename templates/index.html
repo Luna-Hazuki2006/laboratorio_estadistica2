@@ -8,9 +8,137 @@
 </head>
 <body>
     <h1>¡Una gran bienvenida al banco de hipótesis!</h1>
+    <h2>Probabilidades</h2>
+    {% for esto in probabilidades %}
+    <p>{{ esto }}</p>
+    {% endfor %}
+    <h2>Discriminaciones</h2>
+    <table>
+        <tr>
+            {% for esto in razas_sexos[0][0] %}
+            <th>{{ esto }}</th>
+            {% endfor %}
+        </tr>
+        {% for esto in razas_sexos[0][1:] %}
+        <tr>
+            {% for esta in esto %}
+            {% if esto.index(esta) == 0 %}
+            <th>{{ esta }}</th>
+            {% else %}
+            <td>{{ esta }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <p>{{ razas_sexos[1] }}</p>
+    <table>
+        <tr>
+            {% for esto in horas_años[0][0] %}
+            <th>{{ esto }}</th>
+            {% endfor %}
+        </tr>
+        {% for esto in horas_años[0][1:] %}
+        <tr>
+            {% for esta in esto %}
+            {% if esto.index(esta) == 0 %}
+            <th>{{ esta }}</th>
+            {% else %}
+            <td>{{ esta }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <p>{{ horas_años[1] }}</p>
+    <h2>hipótesis</h2>
+    <table>
+        <tr>
+            {% for esto in hipotesis_salarios[0][0] %}
+            <th>{{ esto }}</th>
+            {% endfor %}
+        </tr>
+        {% for esto in hipotesis_salarios[0][1:] %}
+        <tr>
+            {% for esta in esto %}
+            {% if esto.index(esta) == 0 %}
+            <th>{{ esta }}</th>
+            {% else %}
+            <td>{{ esta }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% for esto in hipotesis_salarios[1] %}
+    <p>{{ esto }}</p>
+    {% endfor %}
+    <table>
+        <tr>
+            {% for esto in hipotesis_edades[0][0] %}
+            <th>{{ esto }}</th>
+            {% endfor %}
+        </tr>
+        {% for esto in hipotesis_edades[0][1:] %}
+        <tr>
+            {% for esta in esto %}
+            {% if esto.index(esta) == 0 %}
+            <th>{{ esta }}</th>
+            {% else %}
+            <td>{{ esta }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% for esto in hipotesis_edades[1] %}
+    <p>{{ esto }}</p>
+    {% endfor %}
+    <h2>Variables cuantitativas</h2>
+    {% for esto in tablas %}
+    <table>
+        <caption>{{ esto[0] }}</caption>
+        <tr>
+            {% for esta in esto[1][0].keys() %}
+            <th>{{ esta }}</th>
+            {% endfor %}
+        </tr>
+        {% for i in esto[1][0]['clase'] %}
+        <tr>
+            {% for esta in esto[1][0].keys() %}
+            {% if esta == 'clase' %}
+            <td>{{ esto[1][0][esta][esto[1][0][esta].index(i)]['minimo'] }}-{{ esto[1][0][esta][esto[1][0][esta].index(i)]['maximo'] }}</td>
+            {% else %}
+            <td>{{ esto[1][0][esta][esto[1][0]['clase'].index(i)] }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% for esta in esto[2] %}
+    <h3>{{ esta[0] }}</h3>
+    {% for datos in esta[1] %}
+    <p>{{ datos }}</p>
+    {% endfor %}
+    {% endfor %}
+    <hr>
+    {% endfor %}
     <h2>Diagramas :3</h2>
     {% for esto in diagramas %}
-    <img src="{{ esto }}" alt="{{ esto }}">
+    <figure>
+        <img src="{{ esto }}" alt="{{ esto }}">
+        <figcaption>
+            diagrama tipo 
+            {% if esto[9:].split('-')[1][:-4] == 'histplot' %}
+            histograma
+            {% elif esto[9:].split('-')[1][:-4] == 'pie' %}
+            pastel
+            {% elif esto[9:].split('-')[1][:-4] == 'ecdfplot' %}
+            ojiva
+            {% endif %} 
+            de la variable {{ esto[9:].split('-')[0] }}
+        </figcaption>
+    </figure>
     {% endfor %}
 </body>
 </html>

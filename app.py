@@ -22,11 +22,21 @@ tablas = []
 
 diagramas = []
 
+razas_sexos = []
+
+horas_años = []
+
 lista = []
 
 salarios = []
 edades = []
 horarios = []
+
+probabilidades = []
+
+hipotesis_salarios = []
+
+hipotesis_edades = []
 
 def obtencion(lista, numero):
     fa = lista['fa']
@@ -124,7 +134,7 @@ def creacion(r : list):
 
 def proceso(todo : list, nombre : str): 
     resultados = []
-    mostrar_tabla(todo[0])
+    # mostrar_tabla(todo[0])
     total = todo[0]['fa'][-1]
     # print(f'Total {total}')
     a = todo[0]['clase'][0]['maximo'] - todo[0]['clase'][0]['minimo'] 
@@ -326,6 +336,7 @@ def primero():
         f, ax = plt.subplots(figsize=(7, 5))
         sns.despine(f)
         sns.ecdfplot(datos, x=esto)
+        diagramas.append(f'./static/{esto}-ecdfplot.png')
         f.savefig(f'./static/{esto}-ecdfplot.png')
         # plt.show()
         resultados = proceso(todo, esto)
@@ -340,12 +351,12 @@ def informacion(lista : list):
     return total, media, desviacion
 
 def mostar_resultados(lista : list): 
-    print(f'La probabilidad de que el salario sea mayor que 44 es de {round(salarios[0], 4)}%')
-    print(f'La probabilidad de que el salario de una persona se encuentre entre 47 y 49 es de {round(salarios[1], 4)}%')
-    print(f'La probabilidad de que se encuentre una persona con una edad menor de 49 años es de {round(edades[0], 4)}%')
-    print(f'La probabilidad de que se encuentre una persona con una edad entre 46 y 50 años es de {round(edades[1], 4)}%')
-    print(f'La probabilidad de que las horas trabajadas sea mayor que 29,5 horas es de {round(horarios[0], 4)}%')
-    print(f'La probabilidad de que las horas trabajadas sea menor que 26,5 horas es de {round(horarios[1], 4)}%')
+    probabilidades.append(f'La probabilidad de que el salario sea mayor que 44 es de {round(salarios[0], 4)}%')
+    probabilidades.append(f'La probabilidad de que el salario de una persona se encuentre entre 47 y 49 es de {round(salarios[1], 4)}%')
+    probabilidades.append(f'La probabilidad de que se encuentre una persona con una edad menor de 49 años es de {round(edades[0], 4)}%')
+    probabilidades.append(f'La probabilidad de que se encuentre una persona con una edad entre 46 y 50 años es de {round(edades[1], 4)}%')
+    probabilidades.append(f'La probabilidad de que las horas trabajadas sea mayor que 29,5 horas es de {round(horarios[0], 4)}%')
+    probabilidades.append(f'La probabilidad de que las horas trabajadas sea menor que 26,5 horas es de {round(horarios[1], 4)}%')
     # sns.set_theme()
     # Load the example flights dataset and convert to long-form
     # sns.relplot(data=datos, x="Income", y="Age")
@@ -383,22 +394,41 @@ def mostar_resultados(lista : list):
             parte = f'{cada[0]}-{cada[1]}/{este[0]}-{este[1]}'
             encuentro[parte] = len(list(filter(lambda y: round(y['Age']) >= cada[0] and round(y['Age']) <= cada[1] and round(y['HoursWk']) >= este[0] and round(y['HoursWk']) <= este[1], lista)))
 
+    filas = []
+    columnas = []
     titulo = '| Categorías\t |'
-    for esto in razas.keys(): titulo += f' {esto} |'
+    columnas.append('Sexo\\Razas')
+    for esto in razas.keys(): 
+        columnas.append(esto)
+        titulo += f' {esto} |'
     titulo += ' Total |'
+    columnas.append('Total')
+    filas.append(columnas)
     techo = '-' * len(titulo)
     print(techo)
     print(titulo)
     for esto in sexos.keys(): 
+        columnas = []
+        columnas.append(esto)
         titulo = f'| {esto}\t |'
         for esta in razas.keys(): 
+            columnas.append(fusion[f"{esta}-{esto}"])
             titulo += f' {fusion[f"{esta}-{esto}"]}\t |'
+        columnas.append(sexos[esto])
+        filas.append(columnas)
         titulo += f' {sexos[esto]}\t |'
         techo = '-' * len(titulo)
         print(techo)
         print(titulo)
+    columnas = []
+    columnas.append('Total')
     titulo = '| Total\t\t |'
-    for esto in razas.values(): titulo += f' {esto}\t |'
+    for esto in razas.values(): 
+        columnas.append(esto)
+        titulo += f' {esto}\t |'
+    columnas.append((sum(sexos.values()) + sum(razas.values())) / 2)
+    filas.append(columnas)
+    # pprint(filas)
     titulo += f' {(sum(sexos.values()) + sum(razas.values())) / 2}\t |'
     techo = '-' * len(titulo)
     print(techo)
@@ -408,25 +438,39 @@ def mostar_resultados(lista : list):
     categoria = list(filter(lambda x: x[1] == mayor, fusion.items()))[0]
     hablas = categoria[0].split('-')
     porcentaje = (100 * mayor) / sum(fusion.values())
-    print(f'''
+    explicacion = f'''
 Gracias a esta tabla se puede notar que la mayor parte de fuerza laboral está compuesta de {mayor} personas 
 que son de raza "{hablas[0]}" y sexo "{hablas[1]}", esta siendo el {round(porcentaje, 2)}% de la muestra la mayoría.
-''')
+'''
+    print(explicacion)
+    razas_sexos.append(filas)
+    razas_sexos.append(explicacion)
     print('/' * 50)
+    filas = []
+    columnas = []
+    columnas.append('Edad\\Horas')
     titulo = '| Categorías\t |'
     for esto in horas: 
         if esto == horas[-1]: 
+            columnas.append('Más horas')
             titulo += ' Más horas |'
             break
+        columnas.append(f'{esto[0]}-{esto[1]}')
         titulo += f' {esto[0]}-{esto[1]} |'
+    filas.append(columnas)
+    columnas = []
     techo = '-' * len(titulo)
     print(techo)
     print(titulo)
     for esto in años: 
+        columnas = []
+        columnas.append(f'{esto[0]}-{esto[1]}')
         titulo = f'| {esto[0]}-{esto[1]}\t\t |'
         for esta in horas: 
+            columnas.append(f'{encuentro[f"{esto[0]}-{esto[1]}/{esta[0]}-{esta[1]}"]}')
             titulo += f' {int(encuentro[f"{esto[0]}-{esto[1]}/{esta[0]}-{esta[1]}"])}\t |'
         techo = '-' * len(titulo)
+        filas.append(columnas)
         print(techo)
         print(titulo)
     print(techo)
@@ -434,10 +478,15 @@ que son de raza "{hablas[0]}" y sexo "{hablas[1]}", esta siendo el {round(porcen
     categoria = list(filter(lambda x: x[1] == mayor, encuentro.items()))[0]
     hablas = categoria[0].split('/')
     porcentaje = (mayor * 100) / 2000
-    print(f'''
+    explicacion = f'''
 Gracias a esta tabla se puede notar que la mayor parte de fuerza laboral está compuesta de {mayor} personas 
 que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el {round(porcentaje, 2)}% de la muestra.
-''')
+'''
+    print(explicacion)
+    horas_años.append(filas)
+    horas_años.append(explicacion)
+    filas = []
+    columnas = []
     print('/' * 50)
     pagos = list(map(lambda x: x['Income'], lista))
     grupo1 = random.sample(pagos, 500)
@@ -445,51 +494,79 @@ que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el 
     grupo3 = random.sample(pagos, 600)
     grupos = [['Grupo 1', grupo1], ['Grupo 2', grupo2], ['Grupo 3', grupo3]]
     titulo = '| Nombre | Cantidad | Media aritmética | Desviación típica |'
+    columnas.append('Muestras de salarios')
+    columnas.append('Cantidad')
+    columnas.append('Media aritmética')
+    columnas.append('Desviación típica')
+    filas.append(columnas)
     techo = '-' * len(titulo)
     print(techo)
     print(titulo)
     print(techo)
     for grupo in grupos: 
+        columnas = []
         mejorado = creacion(grupo[1])
         total, media, desviacion = informacion(mejorado)
         grupo.append((total, media, desviacion))
+        columnas.append(grupo[0])
+        columnas.append(total)
+        columnas.append(round(media, 4))
+        columnas.append(round(desviacion, 4))
         titulo = f'| {grupo[0]} | {total} | {round(media, 4)} | {round(desviacion, 4)} |'
         techo = '-' * len(titulo)
+        filas.append(columnas)
         print(titulo)
         print(techo)
+    explicacion = []
     zcal = (grupos[0][2][1] - grupos[1][2][1]) / math.sqrt(((grupos[0][2][2] ** 2) / grupos[0][2][0]) + ((grupos[1][2][2] ** 2) / grupos[1][2][0]))
     ztab = 1.65
     if -ztab < zcal < ztab: 
-        print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que las primeras muestras de salarios se comportan iguales')
+        explicacion.append(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} eso quiere decir que las primeras muestras de salarios se comportan iguales')
     else: 
         texto = f'(zcal) {round(zcal, 2)} > (ztab) {ztab}' if zcal > ztab else f'(zcal) {round(zcal, 2)} < (ztab) {-ztab}'
-        print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos primeras muestras de salarios se comportan de formas diferentes')
+        explicacion.append(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos primeras muestras de salarios se comportan de formas diferentes')
     zcal = (grupos[1][2][1] - grupos[2][2][1]) / math.sqrt(((grupos[1][2][2] ** 2) / grupos[1][2][0]) + ((grupos[2][2][2] ** 2) / grupos[2][2][0]))
     ztab = 2.33
     if -ztab < zcal < ztab: 
-        print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos últimas muestras de salario se comportan igual')
+        explicacion.append(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos últimas muestras de salario se comportan igual')
     else: 
         texto = f'(zcal) {round(zcal, 2)} > (ztab) {ztab}' if zcal > ztab else f'(zcal) {round(zcal, 2)} < (ztab) {-ztab}'
-        print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos últimas muestras de salarios se comportan de formas diferentes')
+        explicacion.append(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos últimas muestras de salarios se comportan de formas diferentes')
     print('/' * 50)
+    hipotesis_salarios.append(filas)
+    hipotesis_salarios.append(explicacion)
+    filas = []
+    columnas = []
     años = list(map(lambda x: x['Age'], lista))
     edad1 = random.sample(años, 300)
     edad2 = random.sample(años, 400)
     partes =[[edad1], [edad2]]
     grupos = [['Grupo 1', edad1], ['Grupo 2', edad2]]
     titulo = '| Nombre | Cantidad | Media aritmética | Desviación típica |'
+    columnas.append('Muestras de edades')
+    columnas.append('Cantidad')
+    columnas.append('Media aritmética')
+    columnas.append('Desviación típica')
+    filas.append(columnas)
     techo = '-' * len(titulo)
     print(techo)
     print(titulo)
     print(techo)
     for grupo in grupos: 
+        columnas = []
         mejorado = creacion(grupo[1])
         total, media, desviacion = informacion(mejorado)
         grupo.append((total, media, desviacion))
+        columnas.append(grupo[0])
+        columnas.append(total)
+        columnas.append(round(media, 4))
+        columnas.append(round(desviacion, 4))
         titulo = f'| {grupo[0]} | {total} | {round(media, 4)} | {round(desviacion, 4)} |'
         techo = '-' * len(titulo)
         print(titulo)
         print(techo)
+        filas.append(columnas)
+    explicacion = []
     for edad in partes: 
         mejorado = creacion(edad[0])
         total, media, desviacion = informacion(mejorado)
@@ -497,19 +574,25 @@ que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el 
     zcal = (partes[0][1][1] - partes[1][1][1]) / math.sqrt(((partes[0][1][2] ** 2) / partes[0][1][0]) + ((partes[1][1][2] ** 2) / partes[1][1][0]))
     ztab = 1.29
     if -ztab < zcal < ztab: 
-        print(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos muestras edades se comportan de formas similares')
+        explicacion.append(f'Ho (hipótesis nula) fue aceptada, ya que {-ztab} < {round(zcal, 2)} < {ztab} esto quiere decir que las dos muestras edades se comportan de formas similares')
     else: 
         texto = f'(zcal) {round(zcal, 2)} > (ztab) {ztab}' if zcal > ztab else f'(zcal) {round(zcal, 2)} < (ztab) {-ztab}'
-        print(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos muestas de edades se comportan de forma diferente')
+        explicacion.append(f'Ha (hipótesis alterna) fue aceptada, ya que {texto} esto quiere decir que las dos muestas de edades se comportan de forma diferente')
+    hipotesis_edades.append(filas)
+    hipotesis_edades.append(explicacion)
 
 
 # def main(): 
 #     primero()
 
+primero() 
+
 @app.get('/')
 def mostrar(request : Request):
-    primero() 
-    return templates.TemplateResponse('index.html', {'request': request, 'tablas': tablas, 'diagramas': diagramas[:14]})
+    return templates.TemplateResponse('index.html', {
+        'request': request, 'tablas': tablas, 'diagramas': diagramas, 'probabilidades': probabilidades, 
+        'razas_sexos': razas_sexos, 'horas_años': horas_años, 'hipotesis_edades': hipotesis_edades, 
+        'hipotesis_salarios': hipotesis_salarios})
 
 # if __name__ == '__main__': 
 #     main()
