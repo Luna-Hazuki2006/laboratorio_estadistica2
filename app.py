@@ -585,6 +585,8 @@ que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el 
 # def main(): 
 #     primero()
 
+# Cuz I always kill the things I love :(
+
 primero() 
 
 @app.get('/')
