@@ -95,7 +95,7 @@ def creacion(r : list):
     if amplitud > int(amplitud): 
         # amplitud += 1
         # amplitud = int(amplitud)
-        amplitud = round(amplitud)
+        amplitud = math.ceil(amplitud)
     # print(f'amplitud: {amplitud}')
     lista = {}
     for esto in r: 
