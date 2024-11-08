@@ -217,8 +217,8 @@ porque daba una división de 0 sobre 0 que no está definida en matemática
     print(f'Rango intercuartil: {round(intercuartil, 4)}')
     resultados.append((titulo, parte))
     parte = []
-    titulo = 'variables de forma: '
-    print('variables de forma: ')
+    titulo = 'Variables de forma: '
+    print('Variables de forma: ')
     indice = (3 * (media - mediana)) / desviacion
     if curtosis == 0: apuntamiento = 'Es mesocúrtica como la normal'
     elif curtosis > 0: apuntamiento = 'Es leptocúrtica apuntada'
