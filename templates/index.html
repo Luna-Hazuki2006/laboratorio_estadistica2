@@ -12,6 +12,7 @@
         <h1>¡Una gran bienvenida al banco de hipótesis!</h1>
     </div>
     <small>Hecho por Ana Paula Mendoza Díaz, estudiante del 3° nivel de la carrera de desarrollo de software, GracoSoft. Noviembre 2024</small>
+    <h2 id="enunciado">Enunciado</h2>
     <p>
         Como parte de las evaluaciones de la asignatura estadística 2 de la carrera de desarrollo de software de GracoSoft, 
         se realiza este trabajo estadístico donde se demuestran las competencias adquiridas en cuanto al análisis estadístico
@@ -32,11 +33,22 @@
         <br>
         A continuación, se muestran los resultados de este trabajo:
     </p>
-    <h2>Probabilidades</h2>
+    <nav>
+        Índice: 
+        <ul>
+            <li><a href="#enunciado">Enunciado</a></li>
+            <li><a href="#probabilidades">Probabilidades</a></li>
+            <li><a href="#discriminaciones">Discriminaciones</a></li>
+            <li><a href="#hipótesis">Hipótesis</a></li>
+            <li><a href="#variables">Variables cuantitativas</a></li>
+            <li><a href="#diagramas">Diagramas</a></li>
+        </ul>
+    </nav>
+    <h2 id="probabilidades">Probabilidades</h2>
     {% for esto in probabilidades %}
     <p>{{ esto }}</p>
     {% endfor %}
-    <h2>Discriminaciones</h2>
+    <h2 id="discriminaciones">Discriminaciones</h2>
     <table>
         <tr>
             {% for esto in razas_sexos[0][0] %}
@@ -75,7 +87,7 @@
         {% endfor %}
     </table>
     <p>{{ horas_años[1] }}</p>
-    <h2>hipótesis</h2>
+    <h2 id="hipótesis">Hipótesis</h2>
     <table>
         <tr>
             {% for esto in hipotesis_salarios[0][0] %}
@@ -118,7 +130,7 @@
     {% for esto in hipotesis_edades[1] %}
     <p>{{ esto }}</p>
     {% endfor %}
-    <h2>Variables cuantitativas</h2>
+    <h2 id="variables">Variables cuantitativas</h2>
     {% for esto in tablas %}
     <table>
         <caption>{{ esto[0] }}</caption>
@@ -147,7 +159,7 @@
     {% endfor %}
     <hr>
     {% endfor %}
-    <h2>Diagramas :3</h2>
+    <h2 id="diagramas">Diagramas :3</h2>
     {% for esto in diagramas %}
     <figure>
         <img src="{{ esto }}" alt="{{ esto }}">
