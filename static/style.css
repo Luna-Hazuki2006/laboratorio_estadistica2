@@ -26,6 +26,7 @@ tr:hover {
 
 body {
     background-image: linear-gradient(lavenderblush, pink, salmon);
+    margin: 5%;
 }
 
 @keyframes vistoso {
