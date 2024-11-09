@@ -376,9 +376,10 @@ def mostar_resultados(lista : list):
     pase = 14
     actual = 24
     while pase <= 94: 
-        años.append((pase, actual))
+        años.append([pase, actual])
         pase = actual + 1
-        actual = pase + 9
+        actual = pase + 9 
+    años[-1][1] = 95
     for esto in lista: 
         try: razas[esto['Race']] += 1
         except: razas[esto['Race']] = 1
@@ -477,7 +478,7 @@ que son de raza "{hablas[0]}" y sexo "{hablas[1]}", esta siendo el {round(porcen
     mayor = max(encuentro.values())
     categoria = list(filter(lambda x: x[1] == mayor, encuentro.items()))[0]
     hablas = categoria[0].split('/')
-    porcentaje = (mayor * 100) / 2000
+    porcentaje = (mayor * 100) / sum(encuentro.values())
     explicacion = f'''
 Gracias a esta tabla se puede notar que la mayor parte de fuerza laboral está compuesta de {mayor} personas 
 que tienen de {hablas[0]} años y trabajan de {hablas[1]} horas, esta siendo el {round(porcentaje, 2)}% de la muestra.

@@ -14,3 +14,7 @@ table, td, th {
 tr:hover {
     background-color: lightblue;
 }
+
+body {
+    background-image: linear-gradient(lavenderblush, pink, salmon);
+}
