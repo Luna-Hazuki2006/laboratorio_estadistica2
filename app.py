@@ -274,14 +274,14 @@ def seleccion(data):
         if data[1] == '0': return (data[0], 'Soltero')
         elif data[1] == '1': return (data[0], 'Casado') 
     elif data[0] == 'USCitizen': 
-        if data[1] == '0': return (data[0], 'Ciudadano')
-        elif data[1] == '1': return (data[0], 'No ciudadano')
+        if data[1] == '1': return (data[0], 'Ciudadano')
+        elif data[1] == '0': return (data[0], 'No ciudadano')
     elif data[0] == 'HealthInsurance': 
-        if data[1] == '0': return (data[0], 'Tiene seguro médico')
-        elif data[1] == '1': return (data[0], 'Sin seguro médico')
+        if data[1] == '1': return (data[0], 'Tiene seguro médico')
+        elif data[1] == '0': return (data[0], 'Sin seguro médico')
     elif data[0] == 'Language': 
-        if data[1] == '0': return (data[0], 'Inglés')
-        elif data[1] == '1': return (data[0], 'Otro')
+        if data[1] == '1': return (data[0], 'Inglés')
+        elif data[1] == '0': return (data[0], 'Otro')
     return data
 
 def primero(): 
