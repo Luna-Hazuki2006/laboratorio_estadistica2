@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+    <link rel="shortcut icon" href="{{ url_for('static', path='verdades.ico') }}" type="image/x-icon">
+    <title>Hipótesis, discriminaciones... ¡Y mucho más!</title>
+</head>
+<body>
+    <div>
+        <h1>¡Una gran bienvenida al banco de hipótesis!</h1>
+    </div>
+    <small>Hecho por Ana Paula Mendoza Díaz, estudiante del 3° nivel de la carrera de desarrollo de software, GracoSoft. Noviembre 2024</small>
+    <h2 id="enunciado">Enunciado</h2>
+    <p>
+        Como parte de las evaluaciones de la asignatura estadística 2 de la carrera de desarrollo de software de GracoSoft, 
+        se realiza este trabajo estadístico donde se demuestran las competencias adquiridas en cuanto al análisis estadístico
+        de un conjunto de datos dados. Para desarrollarlo se está utilizando una base de datos que contiene 2000 registros 
+        asociados a la fuerza laboral de los Estados Unidos esta muestra es aleatoria y es de alrededor de 3,5 millones de hogares 
+        (que representa alrededor del 3% de todos los hogares de Estados Unidos). 
+        <del>Esta encuesta recoge en sus variables 
+        información de la fuerza laboral de este país. Los datos suministrados para este trabajo consisten en una muestra 
+        aleatoria del 1% de todos los residentes de EE. UU.</del>
+        <br>
+        Se realizará un análisis en dos fases, la primera fase consiste en un análisis descriptivo y gráficos de las variables 
+        que considere y con el cual demuestre comportamientos de centralización, variabilidad, posición y curtosis de las variables.  
+        <br>
+        La segunda fase consiste en hacer inferencia estadística usando niveles de significancia (alpha) de 5% y 10%, respectivamente. 
+        <br>
+        Es importante mencionar que este estudio estadístico fue programado totalmente en Python utilizando las librerías: 
+        seaborn, matplotlib, csv, random, scipy, pandas. Para visualizar los datos se utilizó Fastapi.
+        <br>
+        A continuación, se muestran los resultados de este trabajo:
+    </p>
+    <nav>
+        Índice: 
+        <ul>
+            <li><a href="#enunciado">Enunciado</a></li>
+            <li><a href="#probabilidades">Probabilidades</a></li>
+            <li><a href="#discriminaciones">Discriminaciones</a></li>
+            <li><a href="#hipótesis">Hipótesis</a></li>
+            <li><a href="#variables">Variables cuantitativas</a></li>
+            <li><a href="#diagramas">Diagramas</a></li>
+        </ul>
+    </nav>
+    <h2 id="probabilidades">Probabilidades</h2>
+    {% for esto in probabilidades %}
+    <p>{{ esto }}</p>
+    {% endfor %}
+    <h2 id="discriminaciones">Discriminaciones</h2>
+    <table>
+        <tr>
+            {% for esto in razas_sexos[0][0] %}
+            <th>{{ esto }}</th>
+            {% endfor %}
+        </tr>
+        {% for esto in razas_sexos[0][1:] %}
+        <tr>
+            {% for esta in esto %}
+            {% if esto.index(esta) == 0 %}
+            <th>{{ esta }}</th>
+            {% else %}
+            <td>{{ esta }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <p>{{ razas_sexos[1] }}</p>
+    <table>
+        <tr>
+            {% for esto in horas_años[0][0] %}
+            <th>{{ esto }}</th>
+            {% endfor %}
+        </tr>
+        {% for esto in horas_años[0][1:] %}
+        <tr>
+            {% for esta in esto %}
+            {% if esto.index(esta) == 0 %}
+            <th>{{ esta }}</th>
+            {% else %}
+            <td>{{ esta }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <p>{{ horas_años[1] }}</p>
+    <h2 id="hipótesis">Hipótesis</h2>
+    <table>
+        <tr>
+            {% for esto in hipotesis_salarios[0][0] %}
+            <th>{{ esto }}</th>
+            {% endfor %}
+        </tr>
+        {% for esto in hipotesis_salarios[0][1:] %}
+        <tr>
+            {% for esta in esto %}
+            {% if esto.index(esta) == 0 %}
+            <th>{{ esta }}</th>
+            {% else %}
+            <td>{{ esta }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% for esto in hipotesis_salarios[1] %}
+    <p>{{ esto }}</p>
+    {% endfor %}
+    <table>
+        <tr>
+            {% for esto in hipotesis_edades[0][0] %}
+            <th>{{ esto }}</th>
+            {% endfor %}
+        </tr>
+        {% for esto in hipotesis_edades[0][1:] %}
+        <tr>
+            {% for esta in esto %}
+            {% if esto.index(esta) == 0 %}
+            <th>{{ esta }}</th>
+            {% else %}
+            <td>{{ esta }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% for esto in hipotesis_edades[1] %}
+    <p>{{ esto }}</p>
+    {% endfor %}
+    <h2 id="variables">Variables cuantitativas</h2>
+    {% for esto in tablas %}
+    <table>
+        <caption>{{ esto[0] }}</caption>
+        <tr>
+            {% for esta in esto[1][0].keys() %}
+            <th>{{ esta }}</th>
+            {% endfor %}
+        </tr>
+        {% for i in esto[1][0]['clase'] %}
+        <tr>
+            {% for esta in esto[1][0].keys() %}
+            {% if esta == 'clase' %}
+            <td>{{ esto[1][0][esta][esto[1][0][esta].index(i)]['minimo'] }}-{{ esto[1][0][esta][esto[1][0][esta].index(i)]['maximo'] }}</td>
+            {% else %}
+            <td>{{ esto[1][0][esta][esto[1][0]['clase'].index(i)] }}</td>
+            {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    {% for esta in esto[2] %}
+    <h3>{{ esta[0] }}</h3>
+    {% for datos in esta[1] %}
+    <p>{{ datos }}</p>
+    {% endfor %}
+    {% endfor %}
+    <hr>
+    {% endfor %}
+    <h2 id="diagramas">Diagramas :3</h2>
+    {% for esto in diagramas %}
+    <figure>
+        <img src="{{ esto }}" alt="{{ esto }}">
+        <figcaption>
+            diagrama tipo 
+            {% if esto[9:].split('-')[1][:-4] == 'histplot' %}
+            histograma
+            {% elif esto[9:].split('-')[1][:-4] == 'pie' %}
+            pastel
+            {% elif esto[9:].split('-')[1][:-4] == 'ecdfplot' %}
+            ojiva
+            {% endif %} 
+            de la variable {{ esto[9:].split('-')[0] }}
+        </figcaption>
+    </figure>
+    {% endfor %}
+</body>
+</html>
