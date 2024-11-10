@@ -2,7 +2,7 @@ import csv
 import math
 import random
 import seaborn as sns
-import matplotlib as mpl
+# import matplotlib as mpl
 import scipy.stats as st
 import matplotlib.pyplot as plt
 from pandas import DataFrame
@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.requests import Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from pprint import pprint
+# from pprint import pprint
 
 app = FastAPI()
 
